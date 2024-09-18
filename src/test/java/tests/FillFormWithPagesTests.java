@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.RegistrationPage;
 
+import static io.qameta.allure.Allure.step;
 
 class FillFormWithPagesTests extends TestBase {
 
@@ -14,77 +15,97 @@ class FillFormWithPagesTests extends TestBase {
     @Test
     @Tag("FullFields")
     @Tag("automation-practice-form")
-    @DisplayName("Filling out the full form")
+    @DisplayName("Заполнение полной формы")
     void successfulFillFormTest() {
 
-        registrationPage.openPage()
-                .removeBan()
-                .setFirstName("Alexander")
-                .setLastName("Volodin")
-                .setEmail("lex@test.ru")
-                .setGender("Male")
-                .setUserNumber("7123456789")
-                .setDateOfBirth("14", "11", "1989")
-                .setSubjects("Chemistry")
-                .setHobbies("Sports")
-                .setImage("image.jpg")
-                .setAdress("Lenina Street, 1a")
-                .setState("Rajasthan")
-                .setCity("Jaiselmer")
-
-                .submit()
-
-                .checkResult("Student Name Alexander Volodin")
-                .checkResult("Student Email lex@test.ru")
-                .checkResult("Gender Male")
-                .checkResult("Mobile 7123456789")
-                .checkResult("Date of Birth 14 December,1989")
-                .checkResult("Subjects Chemistry")
-                .checkResult("Hobbies 	Sports")
-                .checkResult("Picture image.jpg")
-                .checkResult("Address Lenina Street, 1a")
-                .checkResult("State and City Rajasthan Jaiselmer");
-
+        step("Открыть страницу", () -> {
+                    registrationPage.openPage()
+                            .removeBan();
+                }
+        );
+        step("Заполнить поля", () -> {
+            registrationPage.setFirstName("Alexander")
+                    .setLastName("Volodin")
+                    .setEmail("lex@test.ru")
+                    .setGender("Male")
+                    .setUserNumber("7123456789")
+                    .setDateOfBirth("14", "11", "1989")
+                    .setSubjects("Chemistry")
+                    .setHobbies("Sports")
+                    .setImage("image.jpg")
+                    .setAdress("Lenina Street, 1a")
+                    .setState("Rajasthan")
+                    .setCity("Jaiselmer");
+        });
+        step("Кликнуть Submit", () -> {
+            registrationPage.submit();
+        });
+        step("Сравнить введенные и полученные значения", () -> {
+            registrationPage.checkResult("Student Name Alexander Volodin")
+                    .checkResult("Student Email lex@test.ru")
+                    .checkResult("Gender Male")
+                    .checkResult("Mobile 7123456789")
+                    .checkResult("Date of Birth 14 December,1989")
+                    .checkResult("Subjects Chemistry")
+                    .checkResult("Hobbies 	Sports")
+                    .checkResult("Picture image.jpg")
+                    .checkResult("Address Lenina Street, 1a")
+                    .checkResult("State and City Rajasthan Jaiselmer");
+        });
     }
+
 
     @Test
     @Tag("RequiredFields")
     @Tag("automation-practice-form")
-    @DisplayName("Gender required test")
+    @DisplayName("Проверка обязательного выбора пола")
     void genderValidateFillFormTest() {
 
+        step("Открыть страницу", () -> {
         registrationPage.openPage()
-                .removeBan()
-                .setFirstName("Alexander")
-                .setLastName("Volodin")
-
-
-                .submit()
-
-                .checkValidateGender(registrationPage.redText);
-
+                .removeBan();
+        });
+        step("Ввести имя и фамилию", () -> {
+            registrationPage.setFirstName("Alexander")
+                    .setLastName("Volodin");
+        });
+        step("Кликнуть Submit", () -> {
+            registrationPage.submit();
+        });
+        step("Убедиться что появился красный алерт", () -> {
+            registrationPage.checkValidateGender(registrationPage.redText);
+        });
 
     }
 
     @Test
     @Tag("RequiredFields")
     @Tag("automation-practice-form")
-    @DisplayName("Minimum required fields success test")
+    @DisplayName("Заполнение минимального обязательного количества полей")
     void minimumFormSuccessfullFillFormTest() {
 
+        step("Открыть страницу", () -> {
         registrationPage.openPage()
-                .removeBan()
-                .setFirstName("Alexander")
+                .removeBan();
+        });
+
+        step("Ввести имя, фамилию и пол", () -> {
+            registrationPage.setFirstName("Alexander")
                 .setLastName("Volodin")
-                .setGender("Male")
-                .setUserNumber("1234567890")
+                    .setGender("Male");
+        });
+        step("Ввести номер телефона", () -> {
+            registrationPage.setUserNumber("1234567890");
+        });
 
-                .submit()
-
-                .checkResult("Student Name Alexander Volodin")
+        step("Кликнуть Submit", () -> {
+            registrationPage.submit();
+        });
+        step("Убедиться, что форма отправилась, значения совпадают с введенными", () -> {
+            registrationPage.checkResult("Student Name Alexander Volodin")
                 .checkResult("Gender Male")
                 .checkResult("Mobile 1234567890");
-
+        });
 
     }
 
@@ -92,20 +113,29 @@ class FillFormWithPagesTests extends TestBase {
     @Tag("RequiredFields")
     @Tag("PhoneNumber")
     @Tag("automation-practice-form")
-    @DisplayName("Validate phone number format test")
+    @DisplayName("Валидация формата номера телефона")
     void validatePhoneNumberTest() {
 
+        step("Открыть страницу", () -> {
         registrationPage.openPage()
-                .removeBan()
-                .setFirstName("Alexander")
+                .removeBan();
+        });
+
+        step("Ввести имя, фамилию и пол", () -> {
+            registrationPage.setFirstName("Alexander")
                 .setLastName("Volodin")
-                .setGender("Male")
-                .setUserNumber("123456789")
+                    .setGender("Male");
+        });
+        step("Ввести номер телефона 9 знаков", () -> {
+            registrationPage.setUserNumber("1234567890");
+        });
 
-                .submit()
+        step("Кликнуть Submit", () -> {
+            registrationPage.submit();
+        });
+        step("У поля ввода телефона появился красный алерт", () -> {
+            registrationPage.checkValidatePhoneNumber(registrationPage.redText);
+        });
 
-                .checkValidatePhoneNumber(registrationPage.redText);
-
-
-    }
+}
 }
