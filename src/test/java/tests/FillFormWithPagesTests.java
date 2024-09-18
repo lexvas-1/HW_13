@@ -127,7 +127,7 @@ class FillFormWithPagesTests extends TestBase {
                     .setGender("Male");
         });
         step("Ввести номер телефона 9 знаков", () -> {
-            registrationPage.setUserNumber("1234567890");
+            registrationPage.setUserNumber("123456789");
         });
 
         step("Кликнуть Submit", () -> {
